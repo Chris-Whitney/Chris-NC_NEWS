@@ -91,9 +91,6 @@ const seed = (data) => {
     );
     return db.query(insertComments)
   })
-  .then((result) => {
-    console.log(result.rows)
-  })
   
 };
 
