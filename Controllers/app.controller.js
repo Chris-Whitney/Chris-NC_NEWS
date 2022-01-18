@@ -1,7 +1,10 @@
 const { fetchTopics } = require('../Models/app.models');
 
-exports.getTopics = (req, res) => {
-    console.log('in the controller')
-    fetchTopics();
+exports.getTopics = (req, res, next) => {
+    fetchTopics()
+    .then((topics) => {
+        res.status(200).send({ topics })
+    })
+    .catch(next);
     
-}
+};
