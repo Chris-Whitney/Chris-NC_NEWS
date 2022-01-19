@@ -112,3 +112,34 @@ describe('/api/articles/:article_id', () => {
         
     });
 });
+
+describe('GET/api/articles', () => {
+    test('status 200: returns an array of articles', () => {
+        return request(app)
+        .get('/api/articles')
+        .expect(200)
+        .then((res) => {
+            expect(res.body.articles).toBeInstanceOf(Array)
+            res.body.articles.forEach((article) => {
+                expect(article).toMatchObject({
+                    author: expect.any(String),
+                    title: expect.any(String),
+                    article_id: expect.any(Number),
+                    body: expect.any(String),
+                    topic: expect.any(String),
+                    created_at: expect.any(String),
+                    votes: expect.any(Number),
+                    comment_count: expect.any(Number)
+                })
+            })
+        })
+    });
+    test.only('returns an array of objects sorted by a given query', () => {
+        return request(app)
+        .get('/api/articles?sort_by=votes')
+        .expect(200)
+        .then((res) => {
+            expect(res.body.articles).toBeSortedBy('votes')
+        })
+    });
+});

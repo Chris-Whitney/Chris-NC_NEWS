@@ -33,9 +33,18 @@ exports.updateArticleById = (id, votes) => {
     .then((result) => {
         return result.rows[0];
     })
-    
-}
+};
 
+exports.fetchAllArticles = (sort_by = 'created_at') => {
+    return db.query(`SELECT articles.author, articles.title, articles.article_id, articles.body, articles.topic, articles.votes, articles.created_at,
+    COUNT(comments.comment_id)::INT AS comment_count FROM articles 
+    LEFT JOIN comments 
+    ON articles.article_id = comments.article_id
+    GROUP BY articles.article_id
+    ORDER BY ${sort_by}`).then((articles) => {
+        return articles.rows
+    })
+}
 
 //article_id, title, body, votes, topic, author, created_at
 
