@@ -15,12 +15,29 @@ exports.fetchArticleById = (id) => {
     WHERE articles.article_id = $1 
     GROUP BY articles.article_id`, [ id ])
     .then((result) => {
-        return result.rows[0]
+        const article = result.rows[0];
+        if(!article) {
+            return Promise.reject({
+                status: 404,
+                message: `No article found for article_id ${id}`
+            });
+        }
+        return article;
     })
-    // return db.query(`SELECT * FROM articles WHERE article_id=$1`, [ id ])
-    // .then((article) => {
-    //  console.log(article.rows[0]);
-    // })
 };
 
-//
+exports.updateArticleById = (id, votes) => {
+    return db.query(`UPDATE articles
+    SET votes = votes + $1
+    WHERE article_id = $2 RETURNING*;`, [ votes , id ])
+    .then((result) => {
+        return result.rows[0];
+    })
+    
+}
+
+
+//article_id, title, body, votes, topic, author, created_at
+
+///api/resource/:id body: {} -> malformed body / missing required fields: 400 Bad Request
+// /api/resource/:id body: { increase_votes_by: "word" } -> incorrect type: 400 Bad Request
