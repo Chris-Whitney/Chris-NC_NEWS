@@ -1,7 +1,7 @@
 const db = require("./db/connection");
 const express = require("express")
 const app = express();
-const { getTopics, getArticleById, patchArticleById, getAllArticles} = require('./Controllers/app.controller')
+const { getTopics, getArticleById, patchArticleById, getAllArticles, getCommentsByArticleId} = require('./Controllers/app.controller')
 
 app.use(express.json());
 
@@ -13,6 +13,7 @@ app.get(`/api/articles`, getAllArticles);
 
 app.patch(`/api/articles/:article_id`, patchArticleById);
 
+app.get(`/api/articles/:article_id/comments`, getCommentsByArticleId)
 app.all('*', (req, res) => {
     res.status(404).send({ message : 'Invalid Endpoint!'})
 });
