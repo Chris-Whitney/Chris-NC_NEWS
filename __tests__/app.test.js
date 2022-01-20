@@ -134,12 +134,55 @@ describe('GET/api/articles', () => {
             })
         })
     });
-    test.only('returns an array of objects sorted by a given query', () => {
+    test('status 200: returns an array of article objects sorted by a given query which defaults to sorted by created_at', () => {
         return request(app)
         .get('/api/articles?sort_by=votes')
         .expect(200)
         .then((res) => {
-            expect(res.body.articles).toBeSortedBy('votes')
+            expect(res.body.articles).toBeSortedBy('votes', { descending: true })
+        })
+    });
+    test('status 200: returns an array of article objects ordered by a query', () => {
+        return request(app)
+        .get('/api/articles?order_by=ASC')
+        .expect(200)
+        .then((res) => {
+            expect(res.body.articles).toBeSorted({ coerce: true })
+        })
+    });
+    test('status 200: returns an array of articles filtered by a query', () => {
+        return request(app)
+        .get('/api/articles?topic=mitch')
+        .expect(200)
+        .then((res) => {
+            expect(res.body.articles.length).toBe(11)
+            expect(res.body.articles.every((article) => 
+                article.topic === 'mitch'
+            )).toBe(true)
+        })
+    });
+    test('status 400: invalid sort query', () => {
+        return request(app)
+        .get('/api/articles?sort_by=not_a_valid_column')
+        .expect(400)
+        .then((res) => {
+            expect(res.body.message).toBe('Bad Request')
+        })
+    });
+    test('status 400: invalid order query', () => {
+        return request(app)
+        .get('/api/articles?order_by=not_a_valid_order')
+        .expect(400)
+        .then((res) => {
+            expect(res.body.message).toBe('Bad Request')
+        })
+    });
+    test('status 404: topic does not exist', () => {
+        return request(app)
+        .get('/api/articles?topic=not_a_valid_topic')
+        .expect(404)
+        .then((res) => {
+            expect(res.body.message).toBe('Topic Not Found!')
         })
     });
 });

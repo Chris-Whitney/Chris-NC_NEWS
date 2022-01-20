@@ -25,15 +25,17 @@ exports.patchArticleById = (req, res,  next) => {
     .then((updatedArticle) => {
         res.status(201).send({ updatedArticle });    
     })
-    .catch(next)
+    .catch(next);
     
 };
 
 exports.getAllArticles = (req, res, next) => {
+    const { order_by } = req.query;
     const { sort_by } = req.query;
-    fetchAllArticles(sort_by)
+    const { topic } = req.query
+    fetchAllArticles(sort_by, order_by, topic)
     .then((articles) => {
         res.status(200).send({ articles })
     })
-    
+    .catch(next);
 }

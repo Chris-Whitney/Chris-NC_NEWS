@@ -35,16 +35,41 @@ exports.updateArticleById = (id, votes) => {
     })
 };
 
-exports.fetchAllArticles = (sort_by = 'created_at') => {
-    return db.query(`SELECT articles.author, articles.title, articles.article_id, articles.body, articles.topic, articles.votes, articles.created_at,
-    COUNT(comments.comment_id)::INT AS comment_count FROM articles 
-    LEFT JOIN comments 
-    ON articles.article_id = comments.article_id
-    GROUP BY articles.article_id
-    ORDER BY ${sort_by}`).then((articles) => {
-        return articles.rows
-    })
-}
+exports.fetchAllArticles = (sort_by = 'created_at', order_by = 'DESC', topic) => {
+        let queryStr = `SELECT articles.author, articles.title, articles.article_id, articles.body, articles.topic, articles.created_at, articles.votes,COUNT(comments.body)::INT AS comment_count FROM articles 
+        LEFT JOIN comments 
+        ON articles.article_id = comments.article_id`
+    
+        if(topic) {
+            queryStr += ` WHERE topic = $1 GROUP BY articles.article_id`
+            return db.query(queryStr, [ topic ])
+            .then((result) => {
+                console.log(result.rows)
+                if(result.rows.length === 0) {
+                    return Promise.reject(
+                    {
+                        status: 404,
+                        message: 'Topic Not Found!'
+                    }
+                  )
+                }
+                return result.rows
+            })
+    }
+    
+       else { 
+        return db.query(`SELECT articles.author, articles.title, articles.article_id, articles.body, articles.topic, articles.created_at, articles.votes,COUNT(comments.body)::INT AS comment_count FROM articles 
+        LEFT JOIN comments 
+        ON articles.article_id = comments.article_id
+        GROUP BY articles.article_id
+        ORDER BY ${sort_by} ${order_by}`)
+        .then((result) => {
+            return result.rows
+        })
+    }
+        
+    }
+
 
 //article_id, title, body, votes, topic, author, created_at
 
