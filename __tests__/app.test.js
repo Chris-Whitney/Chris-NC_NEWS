@@ -231,3 +231,24 @@ describe('GET/api/articles/:articles_id/comments', () => {
         }))
     });
 });
+
+describe('POST /api/articles/:article_id/comments', () => {
+    test('status 201: returns a posted comment', () => {
+        return request(app)
+        .post('/api/articles/7/comments')
+        .send({
+            username: "lurker",
+            body: "Yay first comment!" 
+        })
+        .expect(201)
+        .then((res) => {
+            expect(res.body.postedComment).toMatchObject({
+                comment_id: expect.any(Number),
+                votes: expect.any(Number),
+                created_at: expect.any(String),
+                author: expect.any(String),
+                body: expect.any(String)
+            })
+        })
+    });
+});

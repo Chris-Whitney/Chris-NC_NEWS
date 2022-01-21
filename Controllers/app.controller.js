@@ -1,4 +1,4 @@
-const { fetchTopics, fetchArticleById, updateArticleById, fetchAllArticles, fetchCommentsByArticleId} = require('../Models/app.models');
+const { fetchTopics, fetchArticleById, updateArticleById, fetchAllArticles, fetchCommentsByArticleId, postNewComment} = require('../Models/app.models');
 
 exports.getTopics = (req, res, next) => {
     fetchTopics()
@@ -47,3 +47,14 @@ exports.getCommentsByArticleId = (req, res, next) => {
     })
     .catch(next);
 };
+
+exports.postCommentByArticleId = (req, res, next) => {
+    const { article_id } = req.params 
+    const { username } = req.body
+    const { body } = req.body
+    postNewComment(username, body, article_id)
+    .then((postedComment) => {
+        res.status(201).send({ postedComment })
+    })
+    
+}

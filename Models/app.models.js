@@ -102,7 +102,16 @@ exports.fetchAllArticles = (sort_by = 'created_at', order_by = 'DESC', topic) =>
         });
     };
 
-
+exports.postNewComment = (username, body, article_id) => {
+ return db.query(`INSERT INTO comments
+ (votes, author, body, article_id)
+ VALUES (0, $1, $2, $3)
+ RETURNING comment_id, votes, created_at, author, body
+ `, [username, body, article_id])
+ .then((result) => {
+    return result.rows[0]
+ })
+}
 //article_id, title, body, votes, topic, author, created_at
 
 ///api/resource/:id body: {} -> malformed body / missing required fields: 400 Bad Request
