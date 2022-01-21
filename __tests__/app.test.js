@@ -214,7 +214,7 @@ describe('GET/api/articles/:articles_id/comments', () => {
             expect(res.body.comments).toBeInstanceOf(Array)
         })
     });
-    test('status 400: Bad Request', () => {
+    test('status 400: Bad Request if invalid article id type is input', () => {
         return request(app)
         .get('/api/articles/not_a_valid_id_type/comments')
         .expect(400)
@@ -222,7 +222,7 @@ describe('GET/api/articles/:articles_id/comments', () => {
             expect(res.body.message).toBe('Bad Request')
         }))
     });
-    test('status 404: Not Found', () => {
+    test('status 404: Not Found if the article id does not exist', () => {
         return request(app)
         .get('/api/articles/123456/comments')
         .expect(404)

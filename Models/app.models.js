@@ -71,12 +71,12 @@ exports.fetchAllArticles = (sort_by = 'created_at', order_by = 'DESC', topic) =>
     };
 
     exports.fetchCommentsByArticleId = (article_id) => {
-      const lengthArr = [];
+      const ArticleQuant = [];
 
       return db
         .query(`SELECT articles.article_id FROM articles`)
         .then((result) => {
-          lengthArr.push(result.rows.length);
+          ArticleQuant.push(result.rows.length);
         })
         .then(() => {
           return db.query(
@@ -87,11 +87,11 @@ exports.fetchAllArticles = (sort_by = 'created_at', order_by = 'DESC', topic) =>
         })
 
         .then((result) => {
-          if (parseInt(article_id) <= lengthArr[0]) {
+          if (parseInt(article_id) <= ArticleQuant[0]) {
             return Promise.resolve(result.rows);
           }
 
-          if (parseInt(article_id) > lengthArr[0]) {
+          if (parseInt(article_id) > ArticleQuant[0]) {
             return Promise.reject({
               status: 404,
               message: `No article found for article_id ${article_id}`,
