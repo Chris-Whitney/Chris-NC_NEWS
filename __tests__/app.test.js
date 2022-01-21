@@ -187,7 +187,7 @@ describe('GET/api/articles', () => {
     });
 });
 
-describe('GET/api/articles/:articles_id/comments', () => {
+describe('GET/api/articles/:article_id/comments', () => {
     test('status 200: returns an array of comments ', () => {
         return request(app)
         .get('/api/articles/1/comments')
@@ -251,4 +251,49 @@ describe('POST /api/articles/:article_id/comments', () => {
             })
         })
     });
+    test('status 400: Bad Request if invalid article id type is input', () => {
+        return request(app)
+        .post('/api/articles/not_a_valid_id_type/comments')
+        .send({
+            username: "lurker",
+            body: "Yay first comment!" 
+        })
+        .expect(400)
+        .then((res => {
+            expect(res.body.message).toBe('Bad Request')
+        }))
+    });
+    });
+    test('status 400: missing required fields', () => {
+        return request(app)
+        .post('/api/articles/1/comments')
+        .send({})
+        .expect(400)
+        .then((res => {
+            expect(res.body.message).toBe('Bad Request')
+        }))
+    });
+    test('status 400: failing schema validation', () => {
+        return request(app)
+        .post('/api/articles/1/comments')
+        .send({ 
+            user: "lurker", 
+            text: "hey thereeee!"
+        })
+        .expect(400)
+        .then((res => {
+            expect(res.body.message).toBe('Bad Request')
+        }))
+    });
+    test('status 404: Not Found if the article id does not exist', () => {
+        return request(app)
+        .post('/api/articles/123456/comments')
+        .send({
+            username: "lurker",
+            body: "Yay first comment!" 
+        })
+        .expect(404)
+        .then((res => {
+            expect(res.body.message).toBe('No article found')
+        }))
 });

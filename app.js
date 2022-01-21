@@ -28,6 +28,10 @@ app.use((err, req, res, next) => {
     }
     else if (err.code === '22P02' || err.code === '23502' || err.code === '42703' || err.code === '42601'){
         res.status(400).send({ message : 'Bad Request'})
+    } 
+    else if (err.code === '23503') {
+        res.status(404).send({ message : 'No article found'})
+
     } else {
     res.status(500).send({ message : 'Internal Server Error!'})
     }

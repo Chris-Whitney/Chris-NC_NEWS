@@ -56,5 +56,6 @@ exports.postCommentByArticleId = (req, res, next) => {
     .then((postedComment) => {
         res.status(201).send({ postedComment })
     })
+    .catch(next)
     
 }
