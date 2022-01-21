@@ -187,8 +187,8 @@ describe('GET/api/articles', () => {
     });
 });
 
-describe('/api/articles/:articles_id/comments', () => {
-    test.only('status 200: returns an array of comments ', () => {
+describe('GET/api/articles/:articles_id/comments', () => {
+    test('status 200: returns an array of comments ', () => {
         return request(app)
         .get('/api/articles/1/comments')
         .expect(200)
@@ -205,5 +205,21 @@ describe('/api/articles/:articles_id/comments', () => {
                 })
             })
         })
+    });
+    test('status 400: Bad Request', () => {
+        return request(app)
+        .get('/api/articles/not_a_valid_id_type/comments')
+        .expect(400)
+        .then((res => {
+            expect(res.body.message).toBe('Bad Request')
+        }))
+    });
+    test('status 404: Not Found', () => {
+        return request(app)
+        .get('/api/articles/123456/comments')
+        .expect(404)
+        .then((res => {
+            expect(res.body.message).toBe('No article found for article_id 123456')
+        }))
     });
 });
