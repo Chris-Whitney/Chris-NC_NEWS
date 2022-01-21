@@ -206,6 +206,14 @@ describe('GET/api/articles/:articles_id/comments', () => {
             })
         })
     });
+    test('returns an empty array if article_id is valid but has no comments', () => {
+        return request(app)
+        .get('/api/articles/6/comments')
+        .expect(200)
+        .then((res) => {
+            expect(res.body.comments).toBeInstanceOf(Array)
+        })
+    });
     test('status 400: Bad Request', () => {
         return request(app)
         .get('/api/articles/not_a_valid_id_type/comments')
