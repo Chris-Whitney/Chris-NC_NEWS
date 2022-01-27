@@ -7,7 +7,7 @@ const request = require("supertest");
 beforeEach(() => seed(testData));
 afterAll(() => db.end());
 
-describe('/api/invalid_endpoint', () => {
+describe('GET /api/invalid_endpoint', () => {
     test('status:404 and returns an error message', () => {
         return request(app)
         .get('/api/invalid_endpoint')
@@ -18,7 +18,7 @@ describe('/api/invalid_endpoint', () => {
     });
 });
 
-describe('/api/topics', () => {
+describe('GET /api/topics', () => {
     test('status 200: responds with an array of topic objects', () => {
         return request(app)
         .get('/api/topics')
@@ -30,12 +30,13 @@ describe('/api/topics', () => {
                     slug: expect.any(String),
                     description: expect.any(String)
                 })
+                expect(res.body.topics).not.toHaveLength(0)
             })
         })
     });
 });
 
-describe('/api/articles/:article_id', () => {
+describe('GET /api/articles/:article_id', () => {
     test('status 200: responds with a specific article object', () => {
         return request(app)
         .get('/api/articles/1')
@@ -53,7 +54,7 @@ describe('/api/articles/:article_id', () => {
               })
         })
     });
-    test('status 400: bad request', () => {
+    test('status 400: bad request for invalid id type', () => {
         return request(app)
         .get('/api/articles/not_an_id')
         .expect(400)
@@ -71,14 +72,14 @@ describe('/api/articles/:article_id', () => {
     });
 });
 
-describe('/api/articles/:article_id', () => {
-    test('status 201: responds updated article', () => {
+describe('PATCH /api/articles/:article_id', () => {
+    test('status 200: responds with updated article', () => {
         return request(app)
         .patch('/api/articles/1')
         .send({
             inc_votes: -100
         })
-        .expect(201)
+        .expect(200)
         .then((res) => {
             expect(res.body.updatedArticle).toEqual({
                 article_id: 1,
@@ -91,13 +92,21 @@ describe('/api/articles/:article_id', () => {
             })
         }) 
     });
-    test('status 400: malformed body/missing required fields', () => {
+    test('status 200: malformed body/missing required fields', () => {
         return request(app)
         .patch('/api/articles/1')
         .send({})
-        .expect(400)
+        .expect(200)
         .then((res) => {
-            expect(res.body.message).toBe('Bad Request')
+            expect(res.body.updatedArticle).toEqual({
+                article_id: 1,
+                title: 'Living in the shadow of a great man',
+                body: 'I find this existence challenging',
+                votes: 100,
+                topic: 'mitch',
+                author: 'butter_bridge',
+                created_at: '2020-07-09T20:11:00.000Z'
+            })
         })
         
     });
@@ -296,4 +305,11 @@ describe('POST /api/articles/:article_id/comments', () => {
         .then((res => {
             expect(res.body.message).toBe('No article found')
         }))
+});
+describe.only('DELETE - /api/comments/:comment_id', () => {
+    test('status 204 - deletes comment by given comment id resulting in no content', () => {
+        return request(app)
+        .delete('/api/comments/1')
+        .expect(204)
+    });
 });
