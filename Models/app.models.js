@@ -166,3 +166,10 @@ exports.deleteComment = (comment_id) => {
 
 ///api/resource/:id body: {} -> malformed body / missing required fields: 400 Bad Request
 // /api/resource/:id body: { increase_votes_by: "word" } -> incorrect type: 400 Bad Request
+
+exports.fetchUsers = () => {
+  return db.query(`SELECT username FROM users`)
+  .then((users) => {
+    return users.rows
+  })
+}

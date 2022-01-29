@@ -1,13 +1,15 @@
 const db = require("./db/connection");
 const express = require("express")
 const app = express();
-const { getTopics, getArticleById, patchArticleById, getAllArticles, getCommentsByArticleId, postCommentByArticleId, deleteCommentByCommentId, getAvailableEndpoints} = require('./Controllers/app.controller')
+const { getTopics, getArticleById, patchArticleById, getAllArticles, getCommentsByArticleId, postCommentByArticleId, deleteCommentByCommentId, getAvailableEndpoints, getUsers} = require('./Controllers/app.controller')
 
 app.use(express.json());
 
 app.get('/api', getAvailableEndpoints);
 
 app.get('/api/topics', getTopics);
+
+app.get('/api/users', getUsers);
 
 app.get(`/api/articles/:article_id`, getArticleById);
 
