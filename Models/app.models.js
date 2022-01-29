@@ -59,6 +59,7 @@ exports.fetchAllArticles = (
   order_by = "DESC",
   topic
 ) => {
+  const topics = ['mitch', 'cats', 'paper']
   let queryStr = `SELECT articles.author, articles.title, articles.article_id, articles.body, articles.topic, articles.created_at, articles.votes,COUNT(comments.body)::INT AS comment_count FROM articles 
         LEFT JOIN comments 
         ON articles.article_id = comments.article_id`;
@@ -66,7 +67,6 @@ exports.fetchAllArticles = (
   if (topic) {
     queryStr += ` WHERE topic = $1 GROUP BY articles.article_id`;
     return db.query(queryStr, [topic]).then((result) => {
-      console.log(result.rows);
       if (result.rows.length === 0) {
         return Promise.reject({
           status: 404,
@@ -123,6 +123,15 @@ exports.fetchCommentsByArticleId = (article_id) => {
 };
 
 exports.postNewComment = (username, body, article_id) => {
+  const users = ["butter_bridge", "icellusedkars", "rogersop", "lurker"];
+
+  if (username && !users.includes(username)) {
+    return Promise.reject({
+      status: 404,
+      message: `User not found!`,
+    });
+  }
+
   return db
     .query(
       `INSERT INTO comments
@@ -138,9 +147,21 @@ exports.postNewComment = (username, body, article_id) => {
 };
 
 exports.deleteComment = (comment_id) => {
-  return db.query(`DELETE FROM comments
-  WHERE comment_id = $1`, [comment_id])
-}
+  return db
+    .query(
+      `DELETE FROM comments
+  WHERE comment_id = $1 RETURNING *`,
+      [comment_id]
+    )
+    .then((result) => {
+      if (result.rows.length === 0) {
+        return Promise.reject({
+          status: 404,
+          message: "Comment Not Found!",
+        });
+      }
+    });
+};
 //article_id, title, body, votes, topic, author, created_at
 
 ///api/resource/:id body: {} -> malformed body / missing required fields: 400 Bad Request
