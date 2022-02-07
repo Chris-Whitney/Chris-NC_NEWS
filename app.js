@@ -1,4 +1,5 @@
 const db = require("./db/connection");
+const cors = require('cors');
 const express = require("express");
 const app = express();
 const {
@@ -12,6 +13,8 @@ const {
   getAvailableEndpoints,
   getUsers,
 } = require("./Controllers/app.controller");
+
+app.use(cors());
 
 app.use(express.json());
 
