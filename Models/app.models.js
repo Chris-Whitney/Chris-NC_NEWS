@@ -59,7 +59,7 @@ exports.fetchAllArticles = (
   order_by = "DESC",
   topic
 ) => {
-  const topics = ['mitch', 'cats', 'paper']
+  const topics = ["mitch", "cats", "paper"];
   let queryStr = `SELECT articles.author, articles.title, articles.article_id, articles.body, articles.topic, articles.created_at, articles.votes,COUNT(comments.body)::INT AS comment_count FROM articles 
         LEFT JOIN comments 
         ON articles.article_id = comments.article_id`;
@@ -162,14 +162,9 @@ exports.deleteComment = (comment_id) => {
       }
     });
 };
-//article_id, title, body, votes, topic, author, created_at
-
-///api/resource/:id body: {} -> malformed body / missing required fields: 400 Bad Request
-// /api/resource/:id body: { increase_votes_by: "word" } -> incorrect type: 400 Bad Request
 
 exports.fetchUsers = () => {
-  return db.query(`SELECT username FROM users`)
-  .then((users) => {
-    return users.rows
-  })
-}
+  return db.query(`SELECT username, avatar_url, name FROM users`).then((users) => {
+    return users.rows;
+  });
+};

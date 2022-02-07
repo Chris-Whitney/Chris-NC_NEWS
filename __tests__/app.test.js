@@ -300,7 +300,6 @@ describe("POST /api/articles/:article_id/comments", () => {
         expect(res.body.message).toBe("Bad Request");
       });
   });
-
   test("status 400: Bad Request if missing required fields", () => {
     return request(app)
       .post("/api/articles/1/comments")
@@ -347,6 +346,7 @@ describe("POST /api/articles/:article_id/comments", () => {
       });
   });
 });
+
 describe("DELETE - /api/comments/:comment_id", () => {
   test("status 204 - deletes comment by comment id", () => {
     return request(app).delete("/api/comments/1").expect(204);
@@ -368,6 +368,7 @@ describe("DELETE - /api/comments/:comment_id", () => {
       });
   });
 });
+
 describe("GET - /api", () => {
   test("returns a JSON file describing all available endpoints", () => {
     return request(app)
@@ -378,8 +379,9 @@ describe("GET - /api", () => {
       });
   });
 });
+
 describe("GET - /api/users", () => {
-  test("returns with an array of objects containing a single key of username", () => {
+  test("returns with an array of objects containing a user's information", () => {
     return request(app)
       .get("/api/users")
       .expect(200)
@@ -388,6 +390,8 @@ describe("GET - /api/users", () => {
         res.body.users.forEach((user) => {
           expect(user).toMatchObject({
             username: expect.any(String),
+            avatar_url: expect.any(String),
+            name: expect.any(String)
           });
         });
       });
