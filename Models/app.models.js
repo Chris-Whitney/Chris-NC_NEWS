@@ -123,7 +123,7 @@ exports.fetchCommentsByArticleId = (article_id) => {
 };
 
 exports.postNewComment = (username, body, article_id) => {
-  const users = ["butter_bridge", "icellusedkars", "rogersop", "lurker"];
+  const users = ["butter_bridge", "icellusedkars", "rogersop", "lurker", "Anonymous"];
 
   if (username && !users.includes(username)) {
     return Promise.reject({
@@ -137,7 +137,7 @@ exports.postNewComment = (username, body, article_id) => {
       `INSERT INTO comments
  (votes, author, body, article_id)
  VALUES (0, $1, $2, $3)
- RETURNING comment_id, votes, created_at, author, body
+ RETURNING comment_id, votes, article_id, created_at, author, body
  `,
       [username, body, article_id]
     )

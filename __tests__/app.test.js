@@ -282,6 +282,7 @@ describe("POST /api/articles/:article_id/comments", () => {
         expect(res.body.postedComment).toMatchObject({
           comment_id: expect.any(Number),
           votes: expect.any(Number),
+          article_id: expect.any(Number),
           created_at: expect.any(String),
           author: expect.any(String),
           body: expect.any(String),
