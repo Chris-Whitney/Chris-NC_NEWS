@@ -69,8 +69,8 @@ exports.postCommentByArticleId = (req, res, next) => {
 };
 
 exports.deleteCommentByCommentId = (req, res, next) => {
-  const { comment_id } = req.params;
-  deleteComment(comment_id)
+  const { article_id, comment_id } = req.params;
+  deleteComment(article_id, comment_id)
     .then(() => {
       res.status(204).send({});
     })

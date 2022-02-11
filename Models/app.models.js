@@ -1,3 +1,4 @@
+const app = require("../app");
 const db = require("../db/connection");
 
 exports.fetchTopics = () => {
@@ -123,7 +124,7 @@ exports.fetchCommentsByArticleId = (article_id) => {
 };
 
 exports.postNewComment = (username, body, article_id) => {
-  const users = ["butter_bridge", "icellusedkars", "rogersop", "lurker", "Anonymous", 'jessjelly'];
+  const users = ["butter_bridge", "icellusedkars", "rogersop", "lurker", 'cooljmessy', 'jessjelly', 'grumpy19', 'tickle122', 'happyamy2016'];
 
   if (username && !users.includes(username)) {
     return Promise.reject({
@@ -146,11 +147,18 @@ exports.postNewComment = (username, body, article_id) => {
     });
 };
 
-exports.deleteComment = (comment_id) => {
+exports.deleteComment = (article_id, comment_id) => {
+  // return db
+  //   .query(
+  //     `DELETE FROM comments
+  // WHERE comment_id = $1 RETURNING *`,
+  //     [comment_id]
+  //   )
+
   return db
     .query(
-      `DELETE FROM comments
-  WHERE comment_id = $1 RETURNING *`,
+      `SELECT * FROM comments
+  WHERE comment_id = $1`,
       [comment_id]
     )
     .then((result) => {
@@ -160,7 +168,12 @@ exports.deleteComment = (comment_id) => {
           message: "Comment Not Found!",
         });
       }
-    });
+      return db.query(
+        `DELETE FROM comments
+  WHERE comment_id = $1 RETURNING *`,
+        [comment_id]
+      );
+    })
 };
 
 exports.fetchUsers = () => {
