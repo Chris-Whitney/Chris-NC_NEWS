@@ -119,16 +119,16 @@ describe("PATCH /api/articles/:article_id", () => {
         expect(res.body.message).toBe("Bad Request");
       });
   });
-  // test.only('status 404: id does not exist', () => {
-  //     return request(app)
-  //     .patch('/api/articles/99999')
-  //     .send({ inc_votes: 100 })
-  //     .expect(404)
-  //     .then((res) => {
-  //         expect(res.body.message).toBe('Bad Request')
-  //     })
 
-  // });
+  test('status 400: invalid id', () => {
+    return request(app)
+    .patch('/api/articles/not-an-id')
+    .send({inc_votes: 10})
+    .expect(400)
+    .then((res) => {
+      expect(res.body.message).toBe('Bad Request')
+    })
+  });
 });
 
 describe("GET/api/articles", () => {
