@@ -124,7 +124,7 @@ exports.fetchCommentsByArticleId = (article_id) => {
 };
 
 exports.postNewComment = (username, body, article_id) => {
-  const users = ["butter_bridge", "icellusedkars", "rogersop", "lurker", 'cooljmessy', 'jessjelly', 'grumpy19', 'tickle122', 'happyamy2016', 'Anonymous'];
+  const users = ["butter_bridge", "icellusedkars", "rogersop", "lurker", 'cooljmessy', 'jessjelly', 'grumpy19', 'tickle122', 'happyamy2016', 'Anonymous', 'weegembump'];
 
   if (username && !users.includes(username)) {
     return Promise.reject({

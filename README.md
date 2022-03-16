@@ -28,6 +28,10 @@ PGDATABASE=nc_news_test
 
 ### 3. Set-up and seed the databases
 ```
+$ npm setup-dbs
+
+then
+
 $ npm run seed
 ```
 The databases can now be accessed via `psql`.
