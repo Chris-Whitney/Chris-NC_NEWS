@@ -6,13 +6,13 @@
 
 > A live version can be accessed here: https://chrisw-nc-news.herokuapp.com/api
 
+> A live version of the front end can be accessed here: https://chris-corner.netlify.app/
+
 ---
 ## Set-up guide
 ### 1. Install dependencies
 ```
 $ npm i
-$ npm i -D jest
-$ npm i -D jest-sorted
 ```
 At a minimum, [Node.js 17.0.1](https://nodejs.org/en/download/) and [Postgres 8.7.1](https://www.postgresql.org/download/) are required. Postgres will be installed with the command above.
 
