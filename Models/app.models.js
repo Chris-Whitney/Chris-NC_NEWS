@@ -66,7 +66,7 @@ exports.fetchAllArticles = (
         ON articles.article_id = comments.article_id`;
 
   if (topic) {
-    queryStr += ` WHERE topic = $1 GROUP BY articles.article_id`;
+    queryStr += ` WHERE topic = $1 GROUP BY articles.article_id ORDER BY ${sort_by} ${order_by}`;
     return db.query(queryStr, [topic]).then((result) => {
       if (result.rows.length === 0) {
         return Promise.reject({
