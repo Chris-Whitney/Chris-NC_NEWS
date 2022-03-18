@@ -37,7 +37,7 @@ const seed = (data) => {
       FOREIGN KEY (topic) REFERENCES topics(slug),
       author TEXT,
       FOREIGN KEY (author) REFERENCES users(username),
-      created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+      created_at DATE NOT NULL DEFAULT CURRENT_TIMESTAMP
     );`)
   })
   .then(() => {
