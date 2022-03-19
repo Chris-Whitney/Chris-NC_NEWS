@@ -41,7 +41,7 @@ app.all("*", (req, res) => {
 });
 
 app.use((err, req, res, next) => {
-  console.log(err);
+  
   if (err.status && err.message) {
     res.status(err.status).send({ message: err.message });
   } else if (
