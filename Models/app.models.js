@@ -60,7 +60,6 @@ exports.fetchAllArticles = (
   order_by = "DESC",
   topic
 ) => {
-  const topics = ["mitch", "cats", "paper"];
   let queryStr = `SELECT articles.author, articles.title, articles.article_id, articles.body, articles.topic, articles.created_at, articles.votes,COUNT(comments.body)::INT AS comment_count FROM articles 
         LEFT JOIN comments 
         ON articles.article_id = comments.article_id`;
@@ -124,7 +123,19 @@ exports.fetchCommentsByArticleId = (article_id) => {
 };
 
 exports.postNewComment = (username, body, article_id) => {
-  const users = ["butter_bridge", "icellusedkars", "rogersop", "lurker", 'cooljmessy', 'jessjelly', 'grumpy19', 'tickle122', 'happyamy2016', 'Anonymous', 'weegembump'];
+  const users = [
+    "butter_bridge",
+    "icellusedkars",
+    "rogersop",
+    "lurker",
+    "cooljmessy",
+    "jessjelly",
+    "grumpy19",
+    "tickle122",
+    "happyamy2016",
+    "Anonymous",
+    "weegembump",
+  ];
 
   if (username && !users.includes(username)) {
     return Promise.reject({
@@ -141,6 +152,20 @@ exports.postNewComment = (username, body, article_id) => {
  RETURNING comment_id, votes, article_id, created_at, author, body
  `,
       [username, body, article_id]
+    )
+    .then((result) => {
+      return result.rows[0];
+    });
+};
+
+exports.postArticle = (author, title, body, topic) => {
+  return db
+    .query(
+      `INSERT INTO articles
+    (title, topic, author, body, votes)
+    VALUES ($1, $2, $3, $4, 0)
+    RETURNING *`,
+      [title, topic, author, body]
     )
     .then((result) => {
       return result.rows[0];
@@ -166,11 +191,13 @@ exports.deleteComment = (article_id, comment_id) => {
   WHERE comment_id = $1 RETURNING *`,
         [comment_id]
       );
-    })
+    });
 };
 
 exports.fetchUsers = () => {
-  return db.query(`SELECT username, avatar_url, name FROM users`).then((users) => {
-    return users.rows;
-  });
+  return db
+    .query(`SELECT username, avatar_url, name FROM users`)
+    .then((users) => {
+      return users.rows;
+    });
 };

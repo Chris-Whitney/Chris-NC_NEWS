@@ -9,6 +9,7 @@ const {
   getAllArticles,
   getCommentsByArticleId,
   postCommentByArticleId,
+  postNewArticle,
   deleteCommentByCommentId,
   getAvailableEndpoints,
   getUsers,
@@ -33,6 +34,8 @@ app.get(`/api/articles/:article_id/comments`, getCommentsByArticleId);
 app.patch(`/api/articles/:article_id`, patchArticleById);
 
 app.post(`/api/articles/:article_id/comments`, postCommentByArticleId);
+
+app.post("/api/articles", postNewArticle);
 
 app.delete(`/api/comments/:comment_id`, deleteCommentByCommentId);
 

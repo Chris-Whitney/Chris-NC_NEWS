@@ -250,6 +250,30 @@ describe("GET/api/articles/:article_id/comments", () => {
   });
 });
 
+describe.only("POST /api/articles", () => {
+  test("status 201: returns a posted article", () => {
+    return request(app)
+    .post("/api/articles")
+    .send({
+      title: 'example title',
+      topic: 'mitch',
+      username: 'lurker',
+      body: 'example body'
+    })
+    .expect(201)
+    .then((res) => {
+      expect(res.body.postedArticle).toMatchObject({
+        title: expect.any(String),
+        topic: expect.any(String),
+        author: expect.any(String),
+        body: expect.any(String),
+        votes: expect.any(Number),
+        created_at: expect.any(String)
+      });
+    });
+  });
+});
+
 describe("POST /api/articles/:article_id/comments", () => {
   test("status 201: returns a posted comment", () => {
     return request(app)

@@ -5,6 +5,7 @@ const {
   fetchAllArticles,
   fetchCommentsByArticleId,
   postNewComment,
+  postArticle,
   deleteComment,
   fetchUsers,
 } = require("../Models/app.models");
@@ -53,6 +54,16 @@ exports.getCommentsByArticleId = (req, res, next) => {
   fetchCommentsByArticleId(article_id)
     .then((comments) => {
       res.status(200).send({ comments });
+    })
+    .catch(next);
+};
+
+exports.postNewArticle = (req, res, next) => {
+  const { title, topic, username, body } = req.body;
+  postArticle(username, title, body, topic)
+    .then((postedArticle) => {
+      console.log(postedArticle);
+      res.status(201).send({ postedArticle });
     })
     .catch(next);
 };
